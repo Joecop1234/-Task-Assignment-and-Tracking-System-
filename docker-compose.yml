@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: tats-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: tats_system
+      MYSQL_USER: tats_user
+      MYSQL_PASSWORD: tats1234
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+
+  backend:
+    build: ./backend
+    container_name: tats-backend
+    restart: always
+    environment:
+      DB_HOST: mysql      # แก้จาก B_HOST เป็น DB_HOST
+      DB_PORT: 3306
+      DB_NAME: tats_system
+      DB_USER: tats_user
+      DB_PASSWORD: tats1234
+      PORT: 5000          # แก้จาก '5000:5000' เป็น 5000
+    depends_on:
+      - mysql
+    volumes:
+      - ./uploads:/app/uploads
+    # ถ้าอยากเข้า localhost:5000 ได้ด้วย ให้เปิดบรรทัดล่างนี้:
+    ports:
+      - '5000:5000'
+
+  frontend:
+    build: ./tat_frontend
+    container_name: tats-frontend
+    restart: always
+    ports:
+      - '80:80'
+    depends_on:
+      - backend
+
+volumes:
+  mysql-data:
