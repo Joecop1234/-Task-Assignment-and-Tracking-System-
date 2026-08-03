@@ -4,6 +4,4 @@
 
 ![Cyber Design](Cyber_Design.jpg)
 
-## Design Document
 
-[Software Design (PDF)](Sotfware%20Design.pdf)
